@@ -7,12 +7,14 @@
 		name="email"
 		v-model="email"
 		placeholder="email">
-
+		<br>
 	<input
 		type="password"
 		v-model="password"
 		name="password">
-
+		<br>
+		<div class="error" v-html="error" />
+		<br>
 	<button
 		@click="register"
 		>Register</button>
@@ -25,16 +27,21 @@ export default {
 	data() {
 		return {
 			email: '',
-			password: ''
+			password: '',
+			error: null
 		}
 	},
 	methods: {
 		async register () {
-			const response = await AuthenticationService.register({
-				email: this.email,
-				password: this.password
-			})
-			console.log(response.data)
+			try {
+				const response = await AuthenticationService.register({
+					email: this.email,
+					password: this.password
+				})
+				console.log(response.data)
+			} catch (error) {
+				this.error = error.response.data.error
+			}
 		}
 	},
 }
@@ -50,5 +57,7 @@ export default class HelloWorld extends Vue {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
-
+	.error {
+		color:red;
+	}
 </style>
